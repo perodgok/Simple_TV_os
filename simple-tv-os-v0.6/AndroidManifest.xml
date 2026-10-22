@@ -1,0 +1,30 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.simpletvos.home">
+  <uses-feature android:name="android.software.leanback" android:required="false" />
+  <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+  <uses-permission android:name="android.permission.ACCESS_TV_LISTINGS" />
+  <queries>
+    <package android:name="com.google.android.youtube.tv" />
+    <package android:name="com.google.android.youtube.tvmusic" />
+    <package android:name="mobi.zona" />
+    <package android:name="com.tcl.browser" />
+    <package android:name="com.internet.tvbrowser" />
+    <package android:name="org.videolan.vlc" />
+    <package android:name="com.mediatek.wwtv.tvcenter" />
+    <package android:name="com.android.tv.settings" />
+    <package android:name="com.android.settings" />
+    <package android:name="su.happ.proxyutility" />
+  </queries>
+  <application android:theme="@android:style/Theme.Material.NoActionBar" android:label="Simple TV OS" android:usesCleartextTraffic="false">
+    <activity android:name=".MainActivity" android:exported="true" android:screenOrientation="landscape">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.HOME" />
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>

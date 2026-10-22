@@ -1,0 +1,1 @@
+Simple TV OS v0.6: long OK starts tile move, release OK, arrows choose position, OK saves. Native app icons from PackageManager and circular top-right Android TV settings shortcut. Existing package, saved preferences and signing key are preserved. Not tested on target Xiaomi TV.
