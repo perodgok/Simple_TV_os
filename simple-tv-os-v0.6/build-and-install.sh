@@ -18,11 +18,11 @@ echo '[1/8] Проверяем инструменты...'
 for file in "$SDK/platforms/android-35/android.jar" "$BT/aapt2" "$BT/d8" "$BT/zipalign" "$BT/apksigner"; do test -e "$file" || { echo "Отсутствует: $file"; exit 1; }; done
 command -v javac; command -v keytool
 echo '[2/8] Компилируем ресурсы...'
-"$BT/aapt2" compile "$ROOT/res/values/strings.xml" -o "$OUT/res"
+"$BT/aapt2" compile --dir "$ROOT/res" -o "$OUT/res"
 echo '[3/8] Компилируем Android manifest и ресурсы...'
-"$BT/aapt2" link -o "$OUT/base-unsigned.apk" -I "$SDK/platforms/android-35/android.jar" --manifest "$ROOT/AndroidManifest.xml" --min-sdk-version 23 --target-sdk-version 30 "$OUT/res/values_strings.arsc.flat"
+"$BT/aapt2" link -o "$OUT/base-unsigned.apk" -I "$SDK/platforms/android-35/android.jar" --manifest "$ROOT/AndroidManifest.xml" --min-sdk-version 23 --target-sdk-version 30 "$OUT/res/"*.flat
 echo '[4/8] Компилируем Java...'
-javac -encoding UTF-8 -source 8 -target 8 -classpath "$SDK/platforms/android-35/android.jar" -d "$OUT/classes" "$ROOT/src/com/simpletvos/home/MainActivity.java"
+javac -encoding UTF-8 -source 8 -target 8 -classpath "$SDK/platforms/android-35/android.jar" -d "$OUT/classes" "$ROOT/src/com/simpletvos/home/MainActivity.java" "$ROOT/src/com/simpletvos/diagnostics/RemoteKeyAuditService.java"
 echo '[5/8] Создаём classes.dex...'
 "$BT/d8" --min-api 23 --lib "$SDK/platforms/android-35/android.jar" --output "$OUT/dex" $(find "$OUT/classes" -name "*.class")
 cp "$OUT/base-unsigned.apk" "$OUT/with-dex.apk"
