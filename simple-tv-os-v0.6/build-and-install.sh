@@ -11,7 +11,7 @@ OUT="$ROOT/build"
 mkdir -p "$OUT/classes" "$OUT/dex" "$OUT/res" "$HOME/simple-tv-os/logs"
 LOG="$HOME/simple-tv-os/logs/simple-tv-os-v0.6-build.log"
 exec > >(tee "$LOG") 2>&1
-finish(){ code=$?; if [ "$code" -eq 0 ]; then echo '✅ УСПЕШНО — APK собран и отправлен на ТВ'; else echo "❌ СБОЙ — код $code"; fi; echo '========== КОНЕЦ ОТЧЁТА — SIMPLE TV OS BUILD =========='; }
+finish(){ code=$?; if [ "$code" -eq 0 ]; then echo '✅ УСПЕШНО — сборка завершена (установка зависит от BUILD_ONLY)'; else echo "❌ СБОЙ — код $code"; fi; echo '========== КОНЕЦ ОТЧЁТА — SIMPLE TV OS BUILD =========='; }
 trap finish EXIT
 echo '========== НАЧАЛО ОТЧЁТА — SIMPLE TV OS BUILD =========='
 echo '[1/8] Проверяем инструменты...'
@@ -36,6 +36,11 @@ if [ ! -f "$KEY" ]; then
 fi
 "$BT/apksigner" sign --ks "$KEY" --ks-key-alias simpletvos --ks-pass pass:changeit --key-pass pass:changeit --out "$OUT/SimpleTVOS-v0.6.apk" "$OUT/aligned.apk"
 "$BT/apksigner" verify "$OUT/SimpleTVOS-v0.6.apk"
+if [ "${BUILD_ONLY:-0}" = "1" ]; then
+  echo 'BUILD_ONLY=1: APK собран и подписан. Телевизор не изменён.'
+  echo "APK: $OUT/SimpleTVOS-v0.6.apk"
+  exit 0
+fi
 echo '[7/8] Проверяем телевизор...'
 if [ "$(adb -s "$TV" get-state 2>/dev/null)" != device ]; then adb disconnect "$TV" >/dev/null 2>&1 || true; adb connect "$TV"; fi
 [ "$(adb -s "$TV" get-state 2>/dev/null)" = device ] || { echo 'ТВ не авторизован в ADB'; exit 1; }
