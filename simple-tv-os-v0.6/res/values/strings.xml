@@ -1,1 +1,1 @@
-<resources><string name="app_name">Simple TV OS</string></resources>
+<resources><string name="app_name">Simple TV OS</string><string name="remote_key_audit_description">Xiaomi remote diagnostic; does not change buttons</string></resources>
