@@ -356,6 +356,7 @@ public class MainActivity extends Activity {
         ScrollView scroll = new ScrollView(this);
         LinearLayout pane = new LinearLayout(this);
         pane.setOrientation(LinearLayout.VERTICAL);
+        pane.setPadding(dp(18), 0, dp(8), 0);
         scroll.addView(pane);
         appsContent = scroll;
         root.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1));
@@ -469,8 +470,12 @@ public class MainActivity extends Activity {
         TextView label=text("ПРИЛОЖЕНИЯ",15,MUTED); label.setPadding(0,dp(24),0,dp(12)); content.addView(label);
         loadFavorites();
         favoriteRow1=new LinearLayout(this); favoriteRow1.setOrientation(LinearLayout.HORIZONTAL);
+        favoriteRow1.setPadding(dp(18), 0, dp(8), 0);
+        favoriteRow1.setClipChildren(false); favoriteRow1.setClipToPadding(false);
         content.addView(favoriteRow1,new LinearLayout.LayoutParams(-1,dp(100)));
         favoriteRow2=new LinearLayout(this); favoriteRow2.setOrientation(LinearLayout.HORIZONTAL);
+        favoriteRow2.setPadding(dp(18), 0, dp(8), 0);
+        favoriteRow2.setClipChildren(false); favoriteRow2.setClipToPadding(false);
         LinearLayout.LayoutParams second=new LinearLayout.LayoutParams(-1,dp(100));
         second.topMargin=dp(12); content.addView(favoriteRow2,second);
         registerFavorite("youtube",tile(favoriteLabel("youtube"),favoriteColor("youtube"),"com.google.android.youtube.tv"));
