@@ -48,3 +48,29 @@ adb -s "$TV" shell cmd package resolve-activity --brief -a android.intent.action
 ```
 
 **Status:** physical buttons identified; Android-level key dispatch and reprogramming feasibility **unverified**. No claim of working remap.
+
+
+## Android framework keycode audit — 2026-10-23
+
+Source: six per-button ADB logcat captures, full and filtered, supplied in chat.
+
+| Remote | Android keyCode observed in `MiTVWindowPolicyInjector` and `GlobalKey` |
+|---|---:|
+| Wink | **197** |
+| KION | **198** |
+| IVI | **199** |
+| Okko | **200** |
+| Kinopoisk | **201** |
+| Rutube | **203** |
+
+Every key was logged by `MiTVWindowPolicyInjector: mKeyHandlerManager.handleActionNNN` followed by `GlobalKey: receive ACTION_GLOBAL_BUTTON keyCode = NNN`. Numerous roughly 50 ms repetitions of `GlobalKey` are present; the logs do not by themselves prove whether these were hardware repeats or a Xiaomi dispatch loop. Any future handler must debounce, and should treat ACTION_DOWN/repeatCount and ACTION_UP appropriately.
+
+- `enabled_accessibility_services` = `null`
+- `accessibility_enabled` = `0`
+- HOME still resolves to `com.simpletvos.home/.MainActivity`
+- `GlobalKey` repeatedly checks `com.mitv.livetv` and reports `installed:false`. This does NOT justify enabling or installing that app.
+- During Okko capture, an Xiaomi updateservice guard periodically attempted to reconnect the disabled PatchWall `com.mitv.tvhome.atv` and failed; unrelated to confirmation of physical key mapping.
+- No conclusive evidence yet that a third-party accessibility service can receive/consume keys globally, or that remapping of OEM keys works.
+
+### Next controlled test
+Build/install a diagnostic Android 11 AccessibilityService (`canRequestFilterKeyEvents=true`, `FLAG_REQUEST_FILTER_KEY_EVENTS`) and *manually* enable it in TV Accessibility Settings. Log only keyCode/action/repeatCount and show an on-TV/ADB readable report. First validate Wink with Simple TV OS foreground, then in a different app; don't launch Google Launcher or modify backlight until proven. The service must not consume keys during the first test, and it must protect against repeated events. Keep an easy disable/rollback procedure.
